@@ -3,6 +3,7 @@ package com.epam.bigdata.sparkstreaming;
 /**
  * Created by Ilya_Starushchanka on 10/24/2016.
  */
+import com.epam.bigdata.sparkstreaming.entity.LogsEntity;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.VoidFunction;
@@ -12,7 +13,7 @@ import org.apache.spark.streaming.api.java.JavaPairReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka.KafkaUtils;
 import org.elasticsearch.spark.rdd.api.java.JavaEsSpark;
-import org.spark_project.guava.collect.ImmutableList;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,9 +48,16 @@ public class SparkStreamingApp {
         JavaPairReceiverInputDStream<String, String> messages = KafkaUtils.createStream(jssc, zkQuorum, group, topicMap);
 
         JavaDStream<String> lines = messages.map(tuple2 -> {
-            String[] fields = tuple2._2().toString().split(SPLIT);
-            String json1 = "{\"type\" : \"logs\",\"ipinyour_id\" : \"" + fields[2] +"\"}";
+            LogsEntity logsEntity = new LogsEntity(tuple2._2().toString());
+
+            /*String[] fields = tuple2._2().toString().split(SPLIT);
+
+            String json1 = "{\"type\" : \"logs\",\"ipinyour_id\" : \"" + fields[2] +"\"}";*/
+
+            JSONObject jsonObject = new JSONObject(logsEntity);
+            String json1  =jsonObject.toString();
             System.out.println("####1");
+
             System.out.println(json1);
             return json1;
         });

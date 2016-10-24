@@ -152,5 +152,6 @@
     <orderEntry type="library" name="Maven: org.scalatest:scalatest_2.11:2.2.6" level="project" />
     <orderEntry type="library" name="Maven: org.apache.kafka:kafka-clients:0.9.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.elasticsearch:elasticsearch-spark-20_2.10:5.0.0-rc1" level="project" />
+    <orderEntry type="library" name="Maven: org.json:json:20160810" level="project" />
   </component>
 </module>
