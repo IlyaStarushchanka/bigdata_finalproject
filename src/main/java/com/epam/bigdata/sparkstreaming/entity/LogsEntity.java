@@ -56,7 +56,6 @@ public class LogsEntity {
         this.advertiserId = Integer.parseInt(fields[19]);
         this.userTags = Long.parseLong(fields[20]);
         this.streamId = Integer.parseInt(fields[21]);
-
     }
 
 
