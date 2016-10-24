@@ -10,6 +10,7 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.VoidFunction;
+import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaPairReceiverInputDStream;
@@ -50,7 +51,11 @@ public class SparkStreamingApp {
         sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
         sparkConf.set("es.index.auto.create", "true");
 
+
+
         JavaStreamingContext jssc = new JavaStreamingContext(sparkConf, new Duration(2000));
+
+        Broadcast<Map<Integer, CityInfoEntity>> broadcastVar = jssc.sparkContext().broadcast(cityInfoMap);
 
         Map<String, Integer> topicMap = new HashMap<>();
         for (String topic : topics) {
@@ -61,6 +66,7 @@ public class SparkStreamingApp {
 
         JavaDStream<String> lines = messages.map(tuple2 -> {
             LogsEntity logsEntity = new LogsEntity(tuple2._2().toString());
+            logsEntity.setCityInfo(broadcastVar.value().get(logsEntity.getCity()));
 
             /*String[] fields = tuple2._2().toString().split(SPLIT);
 
