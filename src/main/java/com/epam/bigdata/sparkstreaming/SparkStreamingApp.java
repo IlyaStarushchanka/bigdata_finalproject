@@ -3,7 +3,10 @@ package com.epam.bigdata.sparkstreaming;
 /**
  * Created by Ilya_Starushchanka on 10/24/2016.
  */
+import com.epam.bigdata.sparkstreaming.entity.CityInfoEntity;
 import com.epam.bigdata.sparkstreaming.entity.LogsEntity;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.VoidFunction;
@@ -16,7 +19,9 @@ import org.elasticsearch.spark.rdd.api.java.JavaEsSpark;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.net.URI;
 
 public class SparkStreamingApp {
 
@@ -25,7 +30,7 @@ public class SparkStreamingApp {
     public static void main(String[] args) throws Exception {
 
         if (args.length == 0) {
-            System.err.println("Usage: SparkStreamingLogAggregationApp {zkQuorum} {group} {topic} {numThreads}");
+            System.err.println("Usage: SparkStreamingLogAggregationApp {zkQuorum} {group} {topic} {numThreads} {cityPaths}");
             System.exit(1);
         }
 
@@ -33,6 +38,13 @@ public class SparkStreamingApp {
         String group = args[1];
         String[] topics = args[2].split(",");
         int numThreads = Integer.parseInt(args[3]);
+
+        List<String> allCities = FileHelper.getLinesFromFile(args[3]);
+        HashMap<Integer, CityInfoEntity> cityInfoMap = new HashMap<>();
+        allCities.forEach(city -> {
+            String[] fields = city.split(SPLIT);
+            cityInfoMap.put(Integer.parseInt(fields[0]), new CityInfoEntity(Float.parseFloat(fields[6]), Float.parseFloat(fields[7])));
+        });
 
         SparkConf sparkConf = new SparkConf().setAppName("SparkStreamingLogAggregationApp");
         sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
@@ -62,12 +74,8 @@ public class SparkStreamingApp {
             return json1;
         });
 
-        lines.foreachRDD(new VoidFunction<JavaRDD<String>>() {
-            @Override
-            public void call(JavaRDD<String> stringJavaRDD) throws Exception {
-                JavaEsSpark.saveJsonToEs(stringJavaRDD, "test/test");
-            }
-        });
+        lines.foreachRDD(stringJavaRDD ->
+                JavaEsSpark.saveJsonToEs(stringJavaRDD, "test/test"));
 
 //        String json1 = "{\"reason\" : \"business\",\"airport\" : \"SFO\"}";
 //        String json2 = "{\"participants\" : 5,\"airport\" : \"OTP\"}";
