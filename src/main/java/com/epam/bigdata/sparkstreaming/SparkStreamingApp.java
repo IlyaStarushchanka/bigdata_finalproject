@@ -40,7 +40,7 @@ public class SparkStreamingApp {
         String[] topics = args[2].split(",");
         int numThreads = Integer.parseInt(args[3]);
 
-        List<String> allCities = FileHelper.getLinesFromFile(args[3]);
+        List<String> allCities = FileHelper.getLinesFromFile(args[4]);
         HashMap<Integer, CityInfoEntity> cityInfoMap = new HashMap<>();
         allCities.forEach(city -> {
             String[] fields = city.split(SPLIT);
