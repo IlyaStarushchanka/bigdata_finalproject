@@ -5,6 +5,7 @@ package com.epam.bigdata.sparkstreaming;
  */
 import com.epam.bigdata.sparkstreaming.entity.CityInfoEntity;
 import com.epam.bigdata.sparkstreaming.entity.LogsEntity;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.spark.SparkConf;
@@ -17,8 +18,10 @@ import org.apache.spark.streaming.api.java.JavaPairReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka.KafkaUtils;
 import org.elasticsearch.spark.rdd.api.java.JavaEsSpark;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +30,17 @@ import java.net.URI;
 public class SparkStreamingApp {
 
     private static final String SPLIT = "\\t";
+    private static ObjectMapper mapper = new ObjectMapper();
 
     public static void main(String[] args) throws Exception {
+
+
+        /*Double[] floats = new Double[]{1.1,2.2,3.3};
+        //JSONArray mJSONArray = new JSONArray(Arrays.asList(floats));
+        String json1 = mapper.writeValueAsString(floats);
+        System.out.println("####1");
+        System.out.println(json1);*/
+
 
         if (args.length == 0) {
             System.err.println("Usage: SparkStreamingLogAggregationApp {zkQuorum} {group} {topic} {numThreads} {cityPaths}");
@@ -72,8 +84,8 @@ public class SparkStreamingApp {
 
             String json1 = "{\"type\" : \"logs\",\"ipinyour_id\" : \"" + fields[2] +"\"}";*/
 
-            JSONObject jsonObject = new JSONObject(logsEntity);
-            String json1  =jsonObject.toString();
+            //JSONObject jsonObject = new JSONObject(logsEntity);
+            String json1  =mapper.writeValueAsString(logsEntity);
             System.out.println("####1");
 
             System.out.println(json1);
