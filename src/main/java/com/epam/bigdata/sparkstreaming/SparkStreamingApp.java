@@ -53,10 +53,12 @@ public class SparkStreamingApp {
         int numThreads = Integer.parseInt(args[3]);
 
         List<String> allCities = FileHelper.getLinesFromFile(args[4]);
-        HashMap<Integer, Float[]> cityInfoMap = new HashMap<>();
+        //HashMap<Integer, Float[]> cityInfoMap = new HashMap<>();
+        HashMap<Integer, CityInfoEntity> cityInfoMap = new HashMap<>();
         allCities.forEach(city -> {
             String[] fields = city.split(SPLIT);
-            cityInfoMap.put(Integer.parseInt(fields[0]), new Float[]{Float.parseFloat(fields[7]), Float.parseFloat(fields[6])}/*new CityInfoEntity(Float.parseFloat(fields[6]), Float.parseFloat(fields[7]))*/);
+            cityInfoMap.put(Integer.parseInt(fields[0]), new CityInfoEntity(Float.parseFloat(fields[7]), Float.parseFloat(fields[6]))/*new CityInfoEntity(Float.parseFloat(fields[6]), Float.parseFloat(fields[7]))*/);
+            //cityInfoMap.put(Integer.parseInt(fields[0]), new Float[]{Float.parseFloat(fields[7]), Float.parseFloat(fields[6])}/*new CityInfoEntity(Float.parseFloat(fields[6]), Float.parseFloat(fields[7]))*/);
         });
 
         SparkConf sparkConf = new SparkConf().setAppName("SparkStreamingLogAggregationApp");
@@ -67,7 +69,7 @@ public class SparkStreamingApp {
 
         JavaStreamingContext jssc = new JavaStreamingContext(sparkConf, new Duration(2000));
 
-        Broadcast<Map<Integer, Float[]>> broadcastVar = jssc.sparkContext().broadcast(cityInfoMap);
+        Broadcast<Map<Integer, CityInfoEntity>> broadcastVar = jssc.sparkContext().broadcast(cityInfoMap);
 
         Map<String, Integer> topicMap = new HashMap<>();
         for (String topic : topics) {
@@ -78,7 +80,7 @@ public class SparkStreamingApp {
 
         JavaDStream<String> lines = messages.map(tuple2 -> {
             LogsEntity logsEntity = new LogsEntity(tuple2._2().toString());
-            logsEntity.setCityInfo(broadcastVar.value().get(logsEntity.getCity()));
+            logsEntity.setGeoPoint(broadcastVar.value().get(logsEntity.getCity()));
 
             /*String[] fields = tuple2._2().toString().split(SPLIT);
 

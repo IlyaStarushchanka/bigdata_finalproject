@@ -6,30 +6,30 @@ package com.epam.bigdata.sparkstreaming.entity;
 public class CityInfoEntity {
 
 
-    private float latitude;
-    private float longitude;
+    private float lat;
+    private float lon;
 
     public CityInfoEntity(){}
 
     public CityInfoEntity(float latitude, float longitude){
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.lat = latitude;
+        this.lon = longitude;
     }
 
-    public float getLatitude() {
-        return latitude;
+    public float getLat() {
+        return lat;
     }
 
-    public void setLatitude(float latitude) {
-        this.latitude = latitude;
+    public void setLat(float lat) {
+        this.lat = lat;
     }
 
-    public float getLongitude() {
-        return longitude;
+    public float getLon() {
+        return lon;
     }
 
-    public void setLongitude(float longitude) {
-        this.longitude = longitude;
+    public void setLon(float lon) {
+        this.lon = lon;
     }
 
 }
