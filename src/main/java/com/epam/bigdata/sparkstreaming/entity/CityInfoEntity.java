@@ -5,6 +5,7 @@ package com.epam.bigdata.sparkstreaming.entity;
  */
 public class CityInfoEntity {
 
+
     private float latitude;
     private float longitude;
 

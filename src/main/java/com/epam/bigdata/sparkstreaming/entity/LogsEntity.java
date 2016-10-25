@@ -29,7 +29,8 @@ public class LogsEntity {
     private int advertiserId;
     private long  userTags;
     private int streamId;
-    private CityInfoEntity cityInfo;
+
+    private Float[] cityInfo;
 
     public LogsEntity(){}
 
@@ -236,11 +237,11 @@ public class LogsEntity {
         this.streamId = streamId;
     }
 
-    public CityInfoEntity getCityInfo() {
+    public Float[] getCityInfo() {
         return cityInfo;
     }
 
-    public void setCityInfo(CityInfoEntity cityInfo) {
+    public void setCityInfo(Float[] cityInfo) {
         this.cityInfo = cityInfo;
     }
 

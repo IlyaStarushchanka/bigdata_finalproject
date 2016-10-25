@@ -41,10 +41,10 @@ public class SparkStreamingApp {
         int numThreads = Integer.parseInt(args[3]);
 
         List<String> allCities = FileHelper.getLinesFromFile(args[4]);
-        HashMap<Integer, CityInfoEntity> cityInfoMap = new HashMap<>();
+        HashMap<Integer, Float[]> cityInfoMap = new HashMap<>();
         allCities.forEach(city -> {
             String[] fields = city.split(SPLIT);
-            cityInfoMap.put(Integer.parseInt(fields[0]), new CityInfoEntity(Float.parseFloat(fields[6]), Float.parseFloat(fields[7])));
+            cityInfoMap.put(Integer.parseInt(fields[0]), new Float[]{Float.parseFloat(fields[6]), Float.parseFloat(fields[7])}/*new CityInfoEntity(Float.parseFloat(fields[6]), Float.parseFloat(fields[7]))*/);
         });
 
         SparkConf sparkConf = new SparkConf().setAppName("SparkStreamingLogAggregationApp");
@@ -55,7 +55,7 @@ public class SparkStreamingApp {
 
         JavaStreamingContext jssc = new JavaStreamingContext(sparkConf, new Duration(2000));
 
-        Broadcast<Map<Integer, CityInfoEntity>> broadcastVar = jssc.sparkContext().broadcast(cityInfoMap);
+        Broadcast<Map<Integer, Float[]>> broadcastVar = jssc.sparkContext().broadcast(cityInfoMap);
 
         Map<String, Integer> topicMap = new HashMap<>();
         for (String topic : topics) {
