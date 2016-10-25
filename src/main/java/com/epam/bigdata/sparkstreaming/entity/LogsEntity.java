@@ -1,5 +1,6 @@
 package com.epam.bigdata.sparkstreaming.entity;
 
+import org.elasticsearch.common.geo.GeoPoint;
 import scala.collection.immutable.Map;
 
 /**
@@ -30,7 +31,7 @@ public class LogsEntity {
     private long  userTags;
     private int streamId;
 
-    private CityInfoEntity geoPoint;
+    private GeoPoint geoPoint;
 
     public LogsEntity(){}
 
@@ -237,11 +238,11 @@ public class LogsEntity {
         this.streamId = streamId;
     }
 
-    public CityInfoEntity getGeoPoint() {
+    public GeoPoint getGeoPoint() {
         return geoPoint;
     }
 
-    public void setGeoPoint(CityInfoEntity geoPoint) {
+    public void setGeoPoint(GeoPoint geoPoint) {
         this.geoPoint = geoPoint;
     }
 

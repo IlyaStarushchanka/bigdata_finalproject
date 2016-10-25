@@ -17,6 +17,7 @@ import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaPairReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka.KafkaUtils;
+import org.elasticsearch.common.geo.GeoPoint;
 import org.elasticsearch.spark.rdd.api.java.JavaEsSpark;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -54,10 +55,13 @@ public class SparkStreamingApp {
 
         List<String> allCities = FileHelper.getLinesFromFile(args[4]);
         //HashMap<Integer, Float[]> cityInfoMap = new HashMap<>();
-        HashMap<Integer, CityInfoEntity> cityInfoMap = new HashMap<>();
+        HashMap<Integer, GeoPoint> cityInfoMap = new HashMap<>();
         allCities.forEach(city -> {
             String[] fields = city.split(SPLIT);
-            cityInfoMap.put(Integer.parseInt(fields[0]), new CityInfoEntity(Float.parseFloat(fields[7]), Float.parseFloat(fields[6]))/*new CityInfoEntity(Float.parseFloat(fields[6]), Float.parseFloat(fields[7]))*/);
+            GeoPoint geoPoint = new GeoPoint();
+            geoPoint.resetLat(Double.parseDouble(fields[7]));
+            geoPoint.resetLon(Double.parseDouble(fields[6]));
+            cityInfoMap.put(Integer.parseInt(fields[0]), geoPoint/*new CityInfoEntity(Float.parseFloat(fields[6]), Float.parseFloat(fields[7]))*/);
             //cityInfoMap.put(Integer.parseInt(fields[0]), new Float[]{Float.parseFloat(fields[7]), Float.parseFloat(fields[6])}/*new CityInfoEntity(Float.parseFloat(fields[6]), Float.parseFloat(fields[7]))*/);
         });
 
@@ -69,7 +73,7 @@ public class SparkStreamingApp {
 
         JavaStreamingContext jssc = new JavaStreamingContext(sparkConf, new Duration(2000));
 
-        Broadcast<Map<Integer, CityInfoEntity>> broadcastVar = jssc.sparkContext().broadcast(cityInfoMap);
+        Broadcast<Map<Integer, GeoPoint>> broadcastVar = jssc.sparkContext().broadcast(cityInfoMap);
 
         Map<String, Integer> topicMap = new HashMap<>();
         for (String topic : topics) {
