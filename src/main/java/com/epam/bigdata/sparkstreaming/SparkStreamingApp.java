@@ -56,7 +56,7 @@ public class SparkStreamingApp {
         HashMap<Integer, Float[]> cityInfoMap = new HashMap<>();
         allCities.forEach(city -> {
             String[] fields = city.split(SPLIT);
-            cityInfoMap.put(Integer.parseInt(fields[0]), new Float[]{Float.parseFloat(fields[6]), Float.parseFloat(fields[7])}/*new CityInfoEntity(Float.parseFloat(fields[6]), Float.parseFloat(fields[7]))*/);
+            cityInfoMap.put(Integer.parseInt(fields[0]), new Float[]{Float.parseFloat(fields[7]), Float.parseFloat(fields[6])}/*new CityInfoEntity(Float.parseFloat(fields[6]), Float.parseFloat(fields[7]))*/);
         });
 
         SparkConf sparkConf = new SparkConf().setAppName("SparkStreamingLogAggregationApp");
