@@ -99,7 +99,7 @@ public class SparkStreamingApp {
 
             JSONObject jsonObject = new JSONObject(logsEntity);
 
-            //jsonObject.append("@sended_at",new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX").format(new Date()));
+            jsonObject.append("@sended_at",new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX").format(new Date()));
 
             String json1 = jsonObject.toString();
 
@@ -111,7 +111,7 @@ public class SparkStreamingApp {
         });
 
         lines.foreachRDD(stringJavaRDD ->
-                JavaEsSpark.saveJsonToEs(stringJavaRDD, "logsindext3/logs"));
+                JavaEsSpark.saveJsonToEs(stringJavaRDD, args[5] + "/" + args[6]/*"logsindext3/logs"*/));
 
 //        String json1 = "{\"reason\" : \"business\",\"airport\" : \"SFO\"}";
 //        String json2 = "{\"participants\" : 5,\"airport\" : \"OTP\"}";
