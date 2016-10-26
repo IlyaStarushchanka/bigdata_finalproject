@@ -91,7 +91,7 @@ public class SparkStreamingApp {
             Date date = LOGS_DATE_FORMAT.parse(logsEntity.getTimestamp());
             logsEntity.setTimestamp(JSON_DATE_FORMAT.format(date));
 
-            logsEntity.setGeoPoint1(broadcastVar.value().get(logsEntity.getCity()));
+            logsEntity.setGeoPoint(broadcastVar.value().get(logsEntity.getCity()));
 
             /*String[] fields = tuple2._2().toString().split(SPLIT);
 
