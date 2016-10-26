@@ -22,10 +22,7 @@ import org.elasticsearch.spark.rdd.api.java.JavaEsSpark;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.net.URI;
 
 public class SparkStreamingApp {
@@ -98,8 +95,10 @@ public class SparkStreamingApp {
 
             String json1 = "{\"type\" : \"logs\",\"ipinyour_id\" : \"" + fields[2] +"\"}";*/
 
-            //JSONObject jsonObject = new JSONObject(logsEntity);
-            String json1  =mapper.writeValueAsString(logsEntity);
+            JSONObject jsonObject = new JSONObject(logsEntity);
+            jsonObject.append("@sended_at",new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX").format(new Date()));
+            String json1 = jsonObject.toString();
+            //String json1  = mapper.writeValueAsString(logsEntity);
             System.out.println("####1");
 
             System.out.println(json1);
@@ -107,7 +106,7 @@ public class SparkStreamingApp {
         });
 
         lines.foreachRDD(stringJavaRDD ->
-                JavaEsSpark.saveJsonToEs(stringJavaRDD, "test2/test2"));
+                JavaEsSpark.saveJsonToEs(stringJavaRDD, "logs1/logs"));
 
 //        String json1 = "{\"reason\" : \"business\",\"airport\" : \"SFO\"}";
 //        String json2 = "{\"participants\" : 5,\"airport\" : \"OTP\"}";
