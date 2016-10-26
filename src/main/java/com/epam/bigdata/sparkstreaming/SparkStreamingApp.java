@@ -6,29 +6,25 @@ package com.epam.bigdata.sparkstreaming;
 import com.epam.bigdata.sparkstreaming.entity.CityInfoEntity;
 import com.epam.bigdata.sparkstreaming.entity.LogsEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.function.VoidFunction;
 import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaPairReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka.KafkaUtils;
-import org.elasticsearch.common.geo.GeoPoint;
 import org.elasticsearch.spark.rdd.api.java.JavaEsSpark;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
-import java.net.URI;
 
 public class SparkStreamingApp {
 
     private static final String SPLIT = "\\t";
     private static ObjectMapper mapper = new ObjectMapper();
+    private static final SimpleDateFormat LOGS_DATE_FORMAT = new SimpleDateFormat("yyyyMMddhhmmss");
+    private static final SimpleDateFormat JSON_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
 
     public static void main(String[] args) throws Exception {
 
@@ -88,8 +84,13 @@ public class SparkStreamingApp {
 
         JavaPairReceiverInputDStream<String, String> messages = KafkaUtils.createStream(jssc, zkQuorum, group, topicMap);
 
+
         JavaDStream<String> lines = messages.map(tuple2 -> {
             LogsEntity logsEntity = new LogsEntity(tuple2._2().toString());
+
+            Date date = LOGS_DATE_FORMAT.parse(logsEntity.getTimestamp());
+            logsEntity.setTimestamp(JSON_DATE_FORMAT.format(date));
+
             logsEntity.setGeoPoint1(broadcastVar.value().get(logsEntity.getCity()));
 
             /*String[] fields = tuple2._2().toString().split(SPLIT);
@@ -97,8 +98,11 @@ public class SparkStreamingApp {
             String json1 = "{\"type\" : \"logs\",\"ipinyour_id\" : \"" + fields[2] +"\"}";*/
 
             JSONObject jsonObject = new JSONObject(logsEntity);
-            jsonObject.append("@sended_at",new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX").format(new Date()));
+
+            //jsonObject.append("@sended_at",new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX").format(new Date()));
+
             String json1 = jsonObject.toString();
+
             //String json1  = mapper.writeValueAsString(logsEntity);
             System.out.println("####1");
 
@@ -107,7 +111,7 @@ public class SparkStreamingApp {
         });
 
         lines.foreachRDD(stringJavaRDD ->
-                JavaEsSpark.saveJsonToEs(stringJavaRDD, "logs1/logs"));
+                JavaEsSpark.saveJsonToEs(stringJavaRDD, "logsindext1/logs"));
 
 //        String json1 = "{\"reason\" : \"business\",\"airport\" : \"SFO\"}";
 //        String json2 = "{\"participants\" : 5,\"airport\" : \"OTP\"}";
