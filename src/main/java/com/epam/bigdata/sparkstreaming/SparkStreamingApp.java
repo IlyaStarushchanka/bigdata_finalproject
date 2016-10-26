@@ -67,7 +67,7 @@ public class SparkStreamingApp {
             /*GeoPoint geoPoint = new GeoPoint();
             geoPoint.resetLat(Double.parseDouble(fields[7]));
             geoPoint.resetLon(Double.parseDouble(fields[6]));*/
-            cityInfoMap.put(Integer.parseInt(fields[0]), /*geoPoint*/new CityInfoEntity(Float.parseFloat(fields[7]), Float.parseFloat(fields[6])));
+            cityInfoMap.put(Integer.parseInt(fields[0]), /*geoPoint*/new CityInfoEntity(Float.parseFloat(fields[6]), Float.parseFloat(fields[7])));
             //cityInfoMap.put(Integer.parseInt(fields[0]), new Float[]{Float.parseFloat(fields[7]), Float.parseFloat(fields[6])}/*new CityInfoEntity(Float.parseFloat(fields[6]), Float.parseFloat(fields[7]))*/);
         });
 
