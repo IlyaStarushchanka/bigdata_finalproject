@@ -89,7 +89,7 @@ public class SparkStreamingApp {
 
         JavaDStream<String> lines = messages.map(tuple2 -> {
             LogsEntity logsEntity = new LogsEntity(tuple2._2().toString());
-            logsEntity.setGeoPoint(broadcastVar.value().get(logsEntity.getCity()));
+            logsEntity.setGeoPoint1(broadcastVar.value().get(logsEntity.getCity()));
 
             /*String[] fields = tuple2._2().toString().split(SPLIT);
 
