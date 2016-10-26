@@ -111,7 +111,7 @@ public class SparkStreamingApp {
         });
 
         lines.foreachRDD(stringJavaRDD ->
-                JavaEsSpark.saveJsonToEs(stringJavaRDD, "logsindext1/logs"));
+                JavaEsSpark.saveJsonToEs(stringJavaRDD, "logsindext2/logs"));
 
 //        String json1 = "{\"reason\" : \"business\",\"airport\" : \"SFO\"}";
 //        String json2 = "{\"participants\" : 5,\"airport\" : \"OTP\"}";
