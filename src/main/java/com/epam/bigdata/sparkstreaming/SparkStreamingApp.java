@@ -97,9 +97,9 @@ public class SparkStreamingApp {
             String device =  ua.getBrowser() != null ? ua.getOperatingSystem().getDeviceType().getName() : null;
             String osName = ua.getBrowser() != null ? ua.getOperatingSystem().getName() : null;
             String uaFamily = ua.getBrowser() != null ? ua.getBrowser().getGroup().getName() : null;
-            logsEntity.setDevice(replaceSpace(device));
-            logsEntity.setOsName(replaceSpace(osName));
-            logsEntity.setUaFamily(replaceSpace(uaFamily));
+            logsEntity.setDevice(device);
+            logsEntity.setOsName(osName);
+            logsEntity.setUaFamily(uaFamily);
             /*String[] fields = tuple2._2().toString().split(SPLIT);
 
             String json1 = "{\"type\" : \"logs\",\"ipinyour_id\" : \"" + fields[2] +"\"}";*/
@@ -131,9 +131,5 @@ public class SparkStreamingApp {
 
         jssc.start();
         jssc.awaitTermination();
-    }
-
-    private static String replaceSpace(String str) {
-        return str.replaceAll("\\s","_");
     }
 }
