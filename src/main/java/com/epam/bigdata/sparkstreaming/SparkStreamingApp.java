@@ -6,6 +6,7 @@ package com.epam.bigdata.sparkstreaming;
 import com.epam.bigdata.sparkstreaming.entity.CityInfoEntity;
 import com.epam.bigdata.sparkstreaming.entity.LogsEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.bitwalker.useragentutils.UserAgent;
 import org.apache.spark.SparkConf;
 import org.apache.spark.broadcast.Broadcast;
 import org.apache.spark.streaming.Duration;
@@ -92,7 +93,13 @@ public class SparkStreamingApp {
             logsEntity.setTimestamp(JSON_DATE_FORMAT.format(date));
 
             logsEntity.setGeoPoint(broadcastVar.value().get(logsEntity.getCity()));
-
+            UserAgent ua = UserAgent.parseUserAgentString(tuple2._2().toString());
+            String device =  ua.getBrowser() != null ? ua.getOperatingSystem().getDeviceType().getName() : null;
+            String osName = ua.getBrowser() != null ? ua.getOperatingSystem().getName() : null;
+            String uaFamily = ua.getBrowser() != null ? ua.getBrowser().getGroup().getName() : null;
+            logsEntity.setDevice(device);
+            logsEntity.setOsName(osName);
+            logsEntity.setUaFamily(uaFamily);
             /*String[] fields = tuple2._2().toString().split(SPLIT);
 
             String json1 = "{\"type\" : \"logs\",\"ipinyour_id\" : \"" + fields[2] +"\"}";*/
