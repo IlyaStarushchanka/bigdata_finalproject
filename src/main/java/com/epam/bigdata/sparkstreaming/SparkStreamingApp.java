@@ -35,6 +35,14 @@ public class SparkStreamingApp {
 
     public static void main(String[] args) throws Exception {
 
+        /*GeoPoint geoPoint = new GeoPoint();
+        geoPoint.resetLat(Double.parseDouble("42.626595"));
+        geoPoint.resetLon(Double.parseDouble("-0.488439"));
+        LogsEntity log = new LogsEntity();
+        log.setGeoPoint(geoPoint);
+        String json1 = mapper.writeValueAsString(log);
+        System.out.println("####1");
+        System.out.println(json1);*/
 
         /*Double[] floats = new Double[]{1.1,2.2,3.3};
         //JSONArray mJSONArray = new JSONArray(Arrays.asList(floats));
@@ -99,7 +107,7 @@ public class SparkStreamingApp {
         });
 
         lines.foreachRDD(stringJavaRDD ->
-                JavaEsSpark.saveJsonToEs(stringJavaRDD, "test1/test1"));
+                JavaEsSpark.saveJsonToEs(stringJavaRDD, "test2/test2"));
 
 //        String json1 = "{\"reason\" : \"business\",\"airport\" : \"SFO\"}";
 //        String json2 = "{\"participants\" : 5,\"airport\" : \"OTP\"}";
