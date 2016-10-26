@@ -1,8 +1,5 @@
 package com.epam.bigdata.sparkstreaming.entity;
 
-import org.elasticsearch.common.geo.GeoPoint;
-import scala.collection.immutable.Map;
-
 /**
  * Created by Ilya_Starushchanka on 10/24/2016.
  */
