@@ -31,7 +31,7 @@ public class LogsEntity {
     private long  userTags;
     private int streamId;
 
-    private GeoPoint geoPoint1;
+    private CityInfoEntity geoPoint1;
 
     public LogsEntity(){}
 
@@ -238,11 +238,11 @@ public class LogsEntity {
         this.streamId = streamId;
     }
 
-    public GeoPoint getGeoPoint1() {
+    public CityInfoEntity getGeoPoint1() {
         return geoPoint1;
     }
 
-    public void setGeoPoint1(GeoPoint geoPoint1) {
+    public void setGeoPoint1(CityInfoEntity geoPoint1) {
         this.geoPoint1 = geoPoint1;
     }
 
